@@ -94,4 +94,7 @@ class Boblights:
         rgb_decimal = str(float(int(color[0:2], 16))/255)+' '+str(float(int(color[2:4], 16))/255)+' '+str(float(int(color[4:6], 16))/255)
 
         self.socket.send(("set light %s rgb %s\n" % (light, rgb_decimal)).encode())
+
+    def sync(self):
+        """Sync settings to the device. This is also a function you are looking for."""
         self.socket.send(b"sync\n")

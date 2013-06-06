@@ -11,6 +11,7 @@ import pybob
 b = pybob.Boblights()
 b.open()
 b.set_light(b.get_lights()[0], "FF0000")
+b.sync()
 time.sleep(10)
 b.close();
 ```
