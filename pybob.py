@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # pybob - Python client library for boblightd
 # 
@@ -23,13 +24,13 @@ import socket
 class Boblights:
     """Interface for accessing a boblight server"""
 
-    priority = None
+    priority = 128
     socket = None
-    server = None
-    port = None
+    server = '127.0.0.1'
+    port = 19333
     lights = []
 
-    def __init__(self, server='127.0.0.1', port=19333):
+    def __init__(self, server = server, port = port):
         """Initialize a new interface"""
         self.server = server
         self.port = port
@@ -72,7 +73,7 @@ class Boblights:
             assert split[0] == "light"
             self.lights.append(split[1])
 
-    def set_priority(self, priority = 128):
+    def set_priority(self, priority = priority):
         """Sets the priority. Lower is more important, default is 128."""
         self.priority = priority
         self.socket.send(("set priority %d\n" % priority).encode())
