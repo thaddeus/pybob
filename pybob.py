@@ -50,6 +50,7 @@ class Boblights:
             self._read_lights()
 
     def _read_lights(self):
+        """Retrieves a list of lights from the server. In theory, this should only be called at the start of your program."""
         self.socket.send(b"get lights\n")
         lines = []
         lines.append("")
@@ -92,9 +93,18 @@ class Boblights:
         if light not in self.lights:
             raise ValueError("Light %s is not registered" % light)
         
-        rgb_decimal = str(float(int(color[0:2], 16))/255)+' '+str(float(int(color[2:4], 16))/255)+' '+str(float(int(color[4:6], 16))/255)
+        rgb_decimal = self.get_color_string(color, value)
 
         self.socket.send(("set light %s rgb %s\n" % (light, rgb_decimal)).encode())
+
+    def set_lights(self, color='FFFFFF', value=1.0):
+        """Set all lights reported by the server to a specified value."""
+        rgb_decimal = self.get_color_string(color, value)
+        data = ""
+        for light in self.lights:
+            data += ("set light %s rgb %s\n" % (light, rgb_decimal))
+
+        self.socket.send(data.encode())
 
     def set_use(self, light, use):
         """Set the controller to use (or not to) this light for this client. Useful for overlapping patterns."""
@@ -116,3 +126,7 @@ class Boblights:
     def sync(self):
         """Sync settings to the device. This is also a function you are looking for."""
         self.socket.send(b"sync\n")
+
+    def get_color_string(self, color='FFFFFF', value=1.0):
+        """Helper function to calculate RGB values from Hex"""
+        return str(float(int(color[0:2], 16))/255*value)+' '+str(float(int(color[2:4], 16))/255*value)+' '+str(float(int(color[4:6], 16))/255*value)
