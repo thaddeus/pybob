@@ -96,6 +96,23 @@ class Boblights:
 
         self.socket.send(("set light %s rgb %s\n" % (light, rgb_decimal)).encode())
 
+    def set_use(self, light, use):
+        """Set the controller to use (or not to) this light for this client. Useful for overlapping patterns."""
+        if light not in self.lights:
+            raise ValueError("Light %s is not registered" % light)
+
+        if use != "true" and use != "false":
+            raise ValueError("Use value is not valid")
+
+        self.socket.send(("set light %s use %s\n" % (light, use)).encode())
+    
+    def set_speed(self, light, speed):
+        """Set the speed at which a light changes to a new color."""
+        if light not in self.lights:
+            raise ValueError("Light %s is not registered" % light)
+
+        self.socket.send(("set light %s speed %s\n" % (light, speed)).encode())
+
     def sync(self):
         """Sync settings to the device. This is also a function you are looking for."""
         self.socket.send(b"sync\n")
